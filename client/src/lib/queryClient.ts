@@ -29,16 +29,26 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
-    const res = await fetch(queryKey[0] as string, {
-      credentials: "include",
-    });
+    try {
+      const res = await fetch(queryKey[0] as string, {
+        credentials: "include",
+      });
 
-    if (unauthorizedBehavior === "returnNull" && res.status === 401) {
-      return null;
+      if (unauthorizedBehavior === "returnNull" && res.status === 401) {
+        return null;
+      }
+
+      if (res.status === 404 && queryKey[0] === '/api/sprints/active') {
+        // We're expecting a 404 for no active sprint - don't treat as error
+        return null;
+      }
+
+      await throwIfResNotOk(res);
+      return await res.json();
+    } catch (error) {
+      console.error(`Query error for ${queryKey[0]}:`, error);
+      throw error;
     }
-
-    await throwIfResNotOk(res);
-    return await res.json();
   };
 
 export const queryClient = new QueryClient({
@@ -54,4 +64,14 @@ export const queryClient = new QueryClient({
       retry: false,
     },
   },
+});
+
+// Initialize with a custom error handler 
+queryClient.setDefaultOptions({
+  queries: {
+    onError: (err) => {
+      console.error('Query error:', err);
+      // We'll let the components handle their own errors
+    }
+  }
 });
