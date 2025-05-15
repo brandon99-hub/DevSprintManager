@@ -24,6 +24,7 @@ export default function Sidebar({ isOpen, onClose, activeSprint }: SidebarProps)
     { path: "/", label: "Dashboard", icon: "ri-dashboard-line" },
     { path: "/github-prs", label: "GitHub PRs", icon: "ri-git-branch-line" },
     { path: "/team", label: "Team", icon: "ri-group-line" },
+    { path: "/focus", label: "Focus Mode", icon: "ri-timer-line" },
     { path: "/sprint-history", label: "Sprint History", icon: "ri-history-line" },
     { path: "/settings", label: "Settings", icon: "ri-settings-line" },
   ];

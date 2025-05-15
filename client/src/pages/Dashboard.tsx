@@ -4,14 +4,17 @@ import Layout from "@/components/Layout";
 import SprintStats from "@/components/SprintStats";
 import KanbanBoard from "@/components/kanban/KanbanBoard";
 import CreateTaskDialog from "@/components/dialogs/CreateTaskDialog";
+import PitchGeneratorDialog from "@/components/dialogs/PitchGeneratorDialog";
 import ActivityFeed from "@/components/ActivityFeed";
 import { SprintWithTasks } from "@/lib/types";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { Presentation } from "lucide-react";
 
 export default function Dashboard() {
   const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
+  const [isPitchGeneratorOpen, setIsPitchGeneratorOpen] = useState(false);
   const { toast } = useToast();
 
   const { 
@@ -127,6 +130,21 @@ export default function Dashboard() {
 
   return (
     <Layout>
+      <div className="flex justify-between items-center px-6 mt-2 mb-4">
+        <div></div> {/* Empty div for flex spacing */}
+        
+        {activeSprint.hackathonMode && (
+          <Button 
+            variant="outline"
+            onClick={() => setIsPitchGeneratorOpen(true)}
+            className="gap-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white hover:from-indigo-600 hover:to-purple-600 border-0"
+          >
+            <Presentation className="h-4 w-4" />
+            Generate Pitch Deck
+          </Button>
+        )}
+      </div>
+      
       <SprintStats 
         tasks={activeSprint.tasks} 
         activeSprint={activeSprint}
@@ -152,6 +170,14 @@ export default function Dashboard() {
         sprintId={activeSprint.id}
         onTaskCreated={refetch}
       />
+      
+      {activeSprint.hackathonMode && (
+        <PitchGeneratorDialog
+          isOpen={isPitchGeneratorOpen}
+          onClose={() => setIsPitchGeneratorOpen(false)}
+          sprintId={activeSprint.id}
+        />
+      )}
     </Layout>
   );
 }
