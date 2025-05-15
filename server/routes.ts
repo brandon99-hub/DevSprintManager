@@ -172,6 +172,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const validatedData = insertSprintSchema.parse(req.body);
       const sprint = await storage.createSprint(validatedData);
+      
+      // Broadcast sprint creation event
+      broadcastUpdate('sprint_created', sprint);
+      
       res.status(201).json(sprint);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -187,6 +191,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { id } = req.params;
       const validatedData = updateSprintSchema.parse(req.body);
       const sprint = await storage.updateSprint(Number(id), validatedData);
+      
+      // Broadcast sprint update event
+      broadcastUpdate('sprint_updated', sprint);
+      
       res.json(sprint);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -207,6 +215,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       const sprint = await storage.toggleSprintHackathonMode(Number(id), hackathonMode);
+      
+      // Broadcast hackathon mode change event
+      broadcastUpdate('sprint_hackathon_mode_toggled', {
+        sprintId: sprint.id,
+        hackathonMode: sprint.hackathonMode,
+        sprint
+      });
+      
       res.json(sprint);
     } catch (error) {
       res.status(500).json({ message: "Failed to toggle hackathon mode" });
@@ -306,7 +322,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.delete("/api/tasks/:id", ensureAuthenticated, async (req, res) => {
     try {
       const { id } = req.params;
-      await storage.deleteTask(Number(id));
+      const numericId = Number(id);
+      
+      // Get the task before deleting it so we can include its details in the broadcast
+      const task = await storage.getTaskById(numericId);
+      
+      await storage.deleteTask(numericId);
+      
+      // Broadcast task deletion event to all connected clients
+      if (task) {
+        broadcastUpdate('task_deleted', { 
+          taskId: numericId,
+          taskDetails: task 
+        });
+      }
+      
       res.json({ success: true });
     } catch (error) {
       res.status(500).json({ message: "Failed to delete task" });
@@ -328,6 +358,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         status,
         url,
         completedAt: null
+      });
+      
+      // Get the related task for the broadcast
+      const task = await storage.getTaskById(taskId);
+      
+      // Broadcast deployment created event
+      broadcastUpdate('deployment_created', {
+        deployment,
+        task
       });
       
       res.status(201).json(deployment);
