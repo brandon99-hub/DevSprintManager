@@ -9,7 +9,9 @@ import ConnectPRDialog from "@/components/dialogs/ConnectPRDialog";
 import { PlusIcon, GitPullRequestIcon } from "lucide-react";
 
 export default function GithubPRs() {
-  const { data: tasks = [], isLoading } = useQuery<Task[]>({
+  const [isConnectPROpen, setIsConnectPROpen] = useState(false);
+  
+  const { data: tasks = [], isLoading, refetch } = useQuery<Task[]>({
     queryKey: ['/api/tasks'],
   });
 
@@ -19,7 +21,13 @@ export default function GithubPRs() {
   return (
     <Layout>
       <div className="flex-1 p-6 overflow-auto">
-        <h1 className="text-2xl font-bold mb-6">GitHub Pull Requests</h1>
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold">GitHub Pull Requests</h1>
+          <Button onClick={() => setIsConnectPROpen(true)}>
+            <GitPullRequestIcon className="h-4 w-4 mr-2" />
+            Connect PR
+          </Button>
+        </div>
         
         {isLoading ? (
           <div className="flex justify-center p-12">
@@ -141,6 +149,13 @@ export default function GithubPRs() {
             ))}
           </div>
         )}
+        
+        <ConnectPRDialog 
+          isOpen={isConnectPROpen} 
+          onClose={() => setIsConnectPROpen(false)} 
+          tasks={tasks} 
+          onPRConnected={() => refetch()}
+        />
       </div>
     </Layout>
   );

@@ -10,6 +10,7 @@ import GithubPRs from "@/pages/GithubPRs";
 import Team from "@/pages/Team";
 import SprintHistory from "@/pages/SprintHistory";
 import Settings from "@/pages/Settings";
+import FocusModePage from "@/pages/FocusMode";
 
 function Router() {
   return (
@@ -18,6 +19,7 @@ function Router() {
       <Route path="/github-prs" component={GithubPRs} />
       <Route path="/team" component={Team} />
       <Route path="/sprint-history" component={SprintHistory} />
+      <Route path="/focus" component={FocusModePage} />
       <Route path="/settings" component={Settings} />
       <Route component={NotFound} />
     </Switch>

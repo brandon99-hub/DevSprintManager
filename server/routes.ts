@@ -241,6 +241,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Get tasks assigned to the current user
+  app.get("/api/tasks/personal", ensureAuthenticated, async (req, res) => {
+    try {
+      // In a production app, we would use req.user.id here
+      // For now, hard-code a sample user ID for development
+      const userId = 1; // Use a sample user ID 
+      
+      // Get all tasks and filter for those assigned to this user
+      const tasks = await storage.getTasks();
+      const personalTasks = tasks.filter(task => task.assigneeId === userId);
+      
+      res.json(personalTasks);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to get personal tasks" });
+    }
+  });
+  
   // Get task by ID
   app.get("/api/tasks/:id", async (req, res) => {
     try {
