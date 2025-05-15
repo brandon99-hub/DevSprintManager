@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import Layout from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { Task } from "@/lib/types";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import ConnectPRDialog from "@/components/dialogs/ConnectPRDialog";
+import { PlusIcon, GitPullRequestIcon } from "lucide-react";
 
 export default function GithubPRs() {
   const { data: tasks = [], isLoading } = useQuery<Task[]>({

@@ -103,23 +103,23 @@ function getActivityIcon(type: ActivityType) {
   
   switch (type) {
     case 'task_created':
-      return <LuPlusCircle className={`${iconClass} text-green-500`} />;
+      return <PlusCircle className={`${iconClass} text-green-500`} />;
     case 'task_updated':
-      return <LuEdit className={`${iconClass} text-blue-500`} />;
+      return <Pencil className={`${iconClass} text-blue-500`} />;
     case 'task_status_changed':
-      return <LuRefreshCw className={`${iconClass} text-orange-500`} />;
+      return <RefreshCw className={`${iconClass} text-orange-500`} />;
     case 'task_deleted':
-      return <LuTrash2 className={`${iconClass} text-red-500`} />;
+      return <Trash2 className={`${iconClass} text-red-500`} />;
     case 'sprint_created':
-      return <LuPlusCircle className={`${iconClass} text-purple-500`} />;
+      return <PlusCircle className={`${iconClass} text-purple-500`} />;
     case 'sprint_updated':
     case 'sprint_hackathon_mode_toggled':
-      return <LuEdit className={`${iconClass} text-indigo-500`} />;
+      return <Pencil className={`${iconClass} text-indigo-500`} />;
     case 'deployment_created':
     case 'deployment_status_updated':
-      return <LuSend className={`${iconClass} text-cyan-500`} />;
+      return <Send className={`${iconClass} text-cyan-500`} />;
     default:
-      return <LuCheckCircle2 className={`${iconClass} text-gray-500`} />;
+      return <CheckCircle className={`${iconClass} text-gray-500`} />;
   }
 }
 

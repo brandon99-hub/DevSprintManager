@@ -4,6 +4,7 @@ import Layout from "@/components/Layout";
 import SprintStats from "@/components/SprintStats";
 import KanbanBoard from "@/components/kanban/KanbanBoard";
 import CreateTaskDialog from "@/components/dialogs/CreateTaskDialog";
+import ActivityFeed from "@/components/ActivityFeed";
 import { SprintWithTasks } from "@/lib/types";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -132,11 +133,18 @@ export default function Dashboard() {
         onNewTask={() => setIsCreateTaskOpen(true)} 
       />
       
-      <KanbanBoard 
-        tasks={activeSprint.tasks}
-        sprintId={activeSprint.id}
-        refetchTasks={refetch}
-      />
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 px-6 mb-6">
+        <div className="lg:col-span-3">
+          <KanbanBoard 
+            tasks={activeSprint.tasks}
+            sprintId={activeSprint.id}
+            refetchTasks={refetch}
+          />
+        </div>
+        <div className="lg:col-span-1">
+          <ActivityFeed />
+        </div>
+      </div>
       
       <CreateTaskDialog 
         isOpen={isCreateTaskOpen} 
