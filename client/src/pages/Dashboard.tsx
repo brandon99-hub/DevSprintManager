@@ -20,6 +20,22 @@ export default function Dashboard() {
     refetch 
   } = useQuery<SprintWithTasks>({
     queryKey: ['/api/sprints/active'],
+    queryFn: async () => {
+      try {
+        const res = await fetch('/api/sprints/active');
+        if (res.status === 404) {
+          // Expected for no active sprint
+          return null;
+        }
+        if (!res.ok) {
+          throw new Error('Failed to fetch active sprint');
+        }
+        return res.json();
+      } catch (error) {
+        console.error('Error fetching active sprint:', error);
+        throw error;
+      }
+    }
   });
 
   if (isLoading) {

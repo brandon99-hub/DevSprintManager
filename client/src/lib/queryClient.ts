@@ -66,12 +66,4 @@ export const queryClient = new QueryClient({
   },
 });
 
-// Initialize with a custom error handler 
-queryClient.setDefaultOptions({
-  queries: {
-    onError: (err) => {
-      console.error('Query error:', err);
-      // We'll let the components handle their own errors
-    }
-  }
-});
+// No need for extra error handling setup since we've already configured it above
