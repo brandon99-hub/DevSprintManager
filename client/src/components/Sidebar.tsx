@@ -50,17 +50,14 @@ export default function Sidebar({ isOpen, onClose, activeSprint }: SidebarProps)
               onClick={() => {
                 if (isOpen) onClose();
               }}
+              className={`flex items-center gap-2 px-3 py-2 rounded-md ${
+                location === item.path
+                  ? "bg-primary/10 text-primary font-medium"
+                  : "text-slate-600 hover:bg-slate-100 transition-colors"
+              }`}
             >
-              <a
-                className={`flex items-center gap-2 px-3 py-2 rounded-md ${
-                  location === item.path
-                    ? "bg-primary/10 text-primary font-medium"
-                    : "text-slate-600 hover:bg-slate-100 transition-colors"
-                }`}
-              >
-                <i className={item.icon}></i>
-                <span>{item.label}</span>
-              </a>
+              <i className={item.icon}></i>
+              <span>{item.label}</span>
             </Link>
           ))}
         </nav>
